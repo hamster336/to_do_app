@@ -21,14 +21,22 @@ class TaskCard extends StatelessWidget {
 
               SizedBox(width: size.width * 0.04),
 
-              Text(
-                task.title,
-                style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w600,
-                  fontFamily: 'Afacad',
-                  letterSpacing: 1,
-                ),
+              Column(
+                crossAxisAlignment: .start,
+                mainAxisAlignment: .center,
+                children: [
+                  Text(
+                    task.task,
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'Afacad',
+                      letterSpacing: 1,
+                    ),
+                  ),
+
+                  Text(task.createdAt, style: TextStyle(fontFamily: 'Afacad')),
+                ],
               ),
             ],
           ),
