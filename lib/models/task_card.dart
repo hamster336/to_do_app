@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/models/task.dart';
+import 'package:to_do_app/models/ui_helper.dart';
 
 class TaskCard extends StatelessWidget {
   final Task task;
@@ -12,33 +13,39 @@ class TaskCard extends StatelessWidget {
     return SizedBox(
       width: size.width,
       height: size.height * 0.11,
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: Row(
-            children: [
-              Icon(Icons.check_box_outline_blank),
+      child: InkWell(
+        onTap: () => CustomWidgets.showModalSheet(context, task, size),
+        child: Card(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Row(
+              children: [
+                Icon(Icons.check_box_outline_blank),
 
-              SizedBox(width: size.width * 0.04),
+                SizedBox(width: size.width * 0.04),
 
-              Column(
-                crossAxisAlignment: .start,
-                mainAxisAlignment: .center,
-                children: [
-                  Text(
-                    task.task,
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w600,
-                      fontFamily: 'Afacad',
-                      letterSpacing: 1,
+                Column(
+                  crossAxisAlignment: .start,
+                  mainAxisAlignment: .center,
+                  children: [
+                    Text(
+                      task.task,
+                      style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Afacad',
+                        letterSpacing: 1,
+                      ),
                     ),
-                  ),
 
-                  Text(task.createdAt, style: TextStyle(fontFamily: 'Afacad')),
-                ],
-              ),
-            ],
+                    Text(
+                      task.createdAt,
+                      style: TextStyle(fontFamily: 'Afacad'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

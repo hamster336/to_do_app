@@ -1,5 +1,5 @@
 class Task {
-  late String id;
+  late String? id;
   late String task;
   late bool isComplete;
   late String createdAt;
@@ -7,9 +7,9 @@ class Task {
   late Priority priority;
 
   Task({
-    required this.id,
     required this.task,
     required this.createdAt,
+    this.id,
     this.isComplete = false,
     this.dueDate,
     this.priority = Priority.low,

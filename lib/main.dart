@@ -29,9 +29,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-/* 
-  Events change state.
-  State changes UI.
-  UI handles navigation. 
-*/
