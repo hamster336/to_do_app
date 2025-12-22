@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:to_do_app/models/task.dart';
 import 'package:to_do_app/models/task_card.dart';
-import 'package:to_do_app/models/ui_helper.dart';
+import 'package:to_do_app/models/custom_widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -83,14 +83,10 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 5),
                 child: ListView.builder(
                   physics: BouncingScrollPhysics(),
-                  itemCount: 5,
+                  itemCount: 10,
                   itemBuilder: (context, index) {
                     return TaskCard(
-                      task: Task(
-                        id: '',
-                        task: 'DemoTask',
-                        createdAt: '01 Jan 2026',
-                      ),
+                      task: Task(task: 'DemoTask', createdAt: '01 Jan 2026'),
                     );
                   },
                 ),
@@ -103,7 +99,7 @@ class HomeScreen extends StatelessWidget {
       floatingActionButton: ElevatedButton(
         onPressed: () => CustomWidgets.showModalSheet(
           context,
-          Task(id: '', task: '', createdAt: 'now'),
+          Task(task: '', createdAt: 'now'),
           size,
         ),
 
