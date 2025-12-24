@@ -20,7 +20,7 @@ class HomeScreen extends StatelessWidget {
             fontSize: 30,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.75,
-            fontFamily: 'Afacad',
+            // fontFamily: 'Afacad',
           ),
         ),
         centerTitle: true,
@@ -74,22 +74,32 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+
+                Spacer(),
+
+                PopupMenuButton<String>(
+                  offset: Offset(-10, 0),
+                  tooltip: 'Sort tasks',
+                  itemBuilder: (context) => <PopupMenuEntry<String>>[
+                    CustomWidgets.popUpMenuItem('date', 'By date'),
+                    CustomWidgets.popUpMenuItem('priority', 'By priority'),
+                  ],
+
+                  icon: Icon(Icons.swap_vert_outlined, size: 25),
+                ),
               ],
             ),
 
             // SizedBox(height: size.height * 0.01),
             Expanded(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: ListView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return TaskCard(
-                      task: Task(task: 'DemoTask', createdAt: '01 Jan 2026'),
-                    );
-                  },
-                ),
+              child: ListView.builder(
+                physics: BouncingScrollPhysics(),
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return TaskCard(
+                    task: Task(task: 'DemoTask', createdAt: '01 Jan 2026'),
+                  );
+                },
               ),
             ),
           ],

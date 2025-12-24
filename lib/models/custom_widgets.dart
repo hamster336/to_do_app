@@ -14,95 +14,112 @@ class CustomWidgets {
           padding: EdgeInsetsGeometry.only(
             bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          child: Container(
-            width: size.width * 0.95,
-            padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-            child: Column(
-              mainAxisSize: .min,
-              crossAxisAlignment: .start,
-              children: [
-                Text('Created on: ${task.createdAt}'),
+          child: SingleChildScrollView(
+            child: Container(
+              width: size.width * 0.95,
+              padding: EdgeInsets.symmetric(horizontal: 25, vertical: 15),
+              child: Column(
+                mainAxisSize: .min,
+                crossAxisAlignment: .start,
+                children: [
+                  Text('Created on: ${task.createdAt}'),
 
-                Row(
-                  mainAxisAlignment: .center,
-                  children: [
-                    Icon(
-                      Icons.check_box_outline_blank,
-                    ), // set task as complete or incomplete
+                  Row(
+                    mainAxisAlignment: .center,
+                    children: [
+                      Icon(
+                        Icons.check_box_outline_blank,
+                      ), // set task as complete or incomplete
 
-                    SizedBox(width: size.width * 0.03),
+                      SizedBox(width: size.width * 0.03),
 
-                    // textField to enter the task
-                    Expanded(
-                      child: TextField(
-                        maxLines: null,
-                        autofocus: true,
-                        controller: controller,
-                        textCapitalization: TextCapitalization.sentences,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 0.5,
-                          fontFamily: 'Afacad',
-                        ),
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          hintText: 'Long Long text for demo',
-                          hintStyle: TextStyle(color: Colors.grey.shade500),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-
-                SizedBox(height: size.height * 0.1),
-
-                // set reminder and done button
-                Row(
-                  mainAxisAlignment: .spaceBetween,
-                  children: [
-                    // set reminder (optional)
-                    TextButton(
-                      onPressed: () {},
-                      child: Row(
-                        children: [
-                          const Text(
-                            'Set Reminder',
-                            style: TextStyle(
-                              color: Colors.blue,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
+                      // textField to enter the task
+                      Expanded(
+                        child: TextField(
+                          maxLines: null,
+                          autofocus: true,
+                          controller: controller,
+                          textCapitalization: TextCapitalization.sentences,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            letterSpacing: 0.5,
+                            fontFamily: 'Afacad',
                           ),
-
-                          const SizedBox(width: 10),
-
-                          const Icon(Icons.alarm, size: 25, color: Colors.blue),
-                        ],
-                      ),
-                    ),
-
-                    // done adding task
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Done',
-                        style: TextStyle(
-                          color: Colors.orange.shade600,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Long Long text for demo',
+                            hintStyle: TextStyle(color: Colors.grey.shade500),
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
 
-                SizedBox(height: size.height * 0.01),
-              ],
+                  SizedBox(height: size.height * 0.1),
+
+                  // set reminder and done button
+                  Row(
+                    mainAxisAlignment: .spaceBetween,
+                    children: [
+                      // set reminder (optional)
+                      TextButton(
+                        onPressed: () {},
+                        child: Row(
+                          children: [
+                            const Text(
+                              'Set Reminder',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontSize: 20,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+
+                            const SizedBox(width: 10),
+
+                            const Icon(
+                              Icons.alarm,
+                              size: 25,
+                              color: Colors.blue,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // done adding task
+                      TextButton(
+                        onPressed: () {},
+                        child: Text(
+                          'Done',
+                          style: TextStyle(
+                            color: Colors.orange.shade600,
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: size.height * 0.01),
+                ],
+              ),
             ),
           ),
         );
       },
+    );
+  }
+
+  // popUpMenu
+  static PopupMenuItem<String> popUpMenuItem(String value, String text) {
+    return PopupMenuItem(
+      value: value,
+      child: Text(
+        text,
+        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+      ),
     );
   }
 }

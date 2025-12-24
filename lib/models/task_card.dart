@@ -12,40 +12,40 @@ class TaskCard extends StatelessWidget {
 
     return SizedBox(
       width: size.width,
-      height: size.height * 0.11,
-      child: InkWell(
-        onTap: () => CustomWidgets.showModalSheet(context, task, size),
-        child: Card(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Row(
-              children: [
-                Icon(Icons.check_box_outline_blank),
+      height: size.longestSide * 0.11,
+      child: Card(
+        child: ListTile(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 15,
+            vertical: 10,
+          ),
+          onTap: () => CustomWidgets.showModalSheet(context, task, size),
+          leading: Icon(Icons.check_box_outline_blank),
 
-                SizedBox(width: size.width * 0.04),
-
-                Column(
-                  crossAxisAlignment: .start,
-                  mainAxisAlignment: .center,
-                  children: [
-                    Text(
-                      task.task,
-                      style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'Afacad',
-                        letterSpacing: 1,
-                      ),
-                    ),
-
-                    Text(
-                      task.createdAt,
-                      style: TextStyle(fontFamily: 'Afacad'),
-                    ),
-                  ],
-                ),
-              ],
+          title: Text(
+            task.task,
+            style: TextStyle(
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
+              // fontFamily: 'Afacad',
+              letterSpacing: 1,
             ),
+          ),
+
+          subtitle: Text(
+            task.createdAt,
+            style: TextStyle(fontFamily: 'Afacad'),
+          ),
+
+          trailing: PopupMenuButton<String>(
+            tooltip: 'Set Priority',
+            itemBuilder: (context) => <PopupMenuEntry<String>>[
+              CustomWidgets.popUpMenuItem('high', 'High'),
+              CustomWidgets.popUpMenuItem('med', 'Medium'),
+              CustomWidgets.popUpMenuItem('low', 'Low'),
+            ],
+
+            icon: Icon(Icons.keyboard_arrow_down),
           ),
         ),
       ),
