@@ -19,4 +19,9 @@ final class DeleteTask extends TaskEvent {
   DeleteTask({required this.task});
 }
 
+final class ChangeTaskFilter extends TaskEvent {
+  final TaskFilter filter;
+  ChangeTaskFilter({required this.filter});
+}
+
 final class ToggleTaskCompletion extends TaskEvent {}

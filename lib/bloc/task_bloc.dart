@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:to_do_app/models/task.dart';
+import 'package:to_do_app/models/task_filter_enum.dart';
 import 'package:to_do_app/repository/task_repository.dart';
 
 part 'task_event.dart';
@@ -15,6 +16,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<AddTask>(_addTask);
     on<UpdateTask>(_updateTask);
     on<DeleteTask>(_deleteTask);
+    on<ChangeTaskFilter>(_filterTasks);
   }
 
   // load tasks from storage
@@ -74,5 +76,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
     emit(TaskLoaded(tasks: updatedTasks));
     await repository.deleteTask(taskId);
+  }
+
+  // filter tasks by their status of completion
+  void _filterTasks(ChangeTaskFilter event, Emitter<TaskState> emit) {
+    if (state is! TaskLoaded) return;
+
+    final current = state as TaskLoaded;
+    emit(current.copyWith(filter: event.filter));
   }
 }

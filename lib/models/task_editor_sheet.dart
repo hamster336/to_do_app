@@ -47,7 +47,8 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
             crossAxisAlignment: .start,
             children: [
               Text(
-                'Created on: ${(isUpdating) ? widget.initialTask!.createdAt : DateTime.now()}',
+                'Created on: ${(isUpdating) ? getTime(context, widget.initialTask!.createdAt) : getTime(context, DateTime.now())}',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
 
               Row(
@@ -121,26 +122,7 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
                   // done adding task
                   TextButton(
                     onPressed: () {
-                      final text = _controller.text.trim();
-
-                      if (text.isNotEmpty) {
-                        final task = (isUpdating)
-                            ? widget.initialTask!.copyWith(
-                                title: text,
-                                isCompleted: _isCompleted,
-                              )
-                            : Task(
-                                title: text,
-                                createdAt: DateTime.now(),
-                                isCompleted: _isCompleted,
-                              );
-
-                        context.read<TaskBloc>().add(
-                          isUpdating
-                              ? UpdateTask(task: task)
-                              : AddTask(task: task),
-                        );
-                      }
+                      _save(isUpdating);
                       Navigator.pop(context);
                     },
                     child: Text(
@@ -161,5 +143,51 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
         ),
       ),
     );
+  }
+
+  // add, update or delete a task
+  void _save(bool isUpdating) {
+    final text = _controller.text.trim();
+
+    final isChanged = (isUpdating) ? text != widget.initialTask!.title : true;
+
+    // add or update if the textField in not empty and the title of the task is changed
+    if (text.isNotEmpty && isChanged) {
+      final task = (isUpdating)
+          ? widget.initialTask!.copyWith(title: text, isCompleted: _isCompleted)
+          : Task(
+              title: text,
+              createdAt: DateTime.now(),
+              isCompleted: _isCompleted,
+            );
+
+      context.read<TaskBloc>().add(
+        isUpdating ? UpdateTask(task: task) : AddTask(task: task),
+      );
+    }
+
+    // delete the existing task if title is removed
+    if (text.isEmpty && isChanged && isUpdating) {
+      context.read<TaskBloc>().add(DeleteTask(task: widget.initialTask!));
+    }
+  }
+
+  // format time
+  String getTime(BuildContext context, DateTime time) {
+    List<String> months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return '${TimeOfDay.fromDateTime(time).format(context)} | ${'${months[time.month - 1]} ${time.day}, ${time.year}'}';
   }
 }

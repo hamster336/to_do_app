@@ -4,6 +4,7 @@ import 'package:to_do_app/bloc/task_bloc.dart';
 import 'package:to_do_app/models/task_card.dart';
 import 'package:to_do_app/models/custom_widgets.dart';
 import 'package:to_do_app/models/task_editor_sheet.dart';
+import 'package:to_do_app/models/task_filter_enum.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -46,64 +47,56 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             SizedBox(height: size.height * 0.01),
 
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'All',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'Afacad',
-                      letterSpacing: 0.5,
+            BlocBuilder<TaskBloc, TaskState>(
+              builder: (context, state) {
+                if (state is! TaskLoaded) return const SizedBox.shrink();
+
+                final currentFilter = state.filter;
+
+                return Row(
+                  mainAxisAlignment: .start,
+                  children: [
+                    CustomWidgets.filterButtons(
+                      label: 'All',
+                      isSelected: currentFilter == TaskFilter.all,
+                      onTap: () => context.read<TaskBloc>().add(
+                        ChangeTaskFilter(filter: TaskFilter.all),
+                      ),
                     ),
-                  ),
-                ),
-
-                const SizedBox(width: 10),
-
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Active',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'Afacad',
-                      letterSpacing: 0.5,
+                    const SizedBox(width: 10),
+                    CustomWidgets.filterButtons(
+                      label: 'Active',
+                      isSelected: currentFilter == TaskFilter.active,
+                      onTap: () => context.read<TaskBloc>().add(
+                        ChangeTaskFilter(filter: TaskFilter.active),
+                      ),
                     ),
-                  ),
-                ),
-
-                const SizedBox(width: 10),
-
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text(
-                    'Completed',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontFamily: 'Afacad',
-                      letterSpacing: 0.5,
+                    const SizedBox(width: 10),
+                    CustomWidgets.filterButtons(
+                      label: 'Completed',
+                      isSelected: currentFilter == TaskFilter.completed,
+                      onTap: () => context.read<TaskBloc>().add(
+                        ChangeTaskFilter(filter: TaskFilter.completed),
+                      ),
                     ),
-                  ),
-                ),
 
-                Spacer(),
+                    Spacer(),
 
-                PopupMenuButton<String>(
-                  offset: Offset(-10, 0),
-                  tooltip: 'Sort tasks',
-                  itemBuilder: (context) => <PopupMenuEntry<String>>[
-                    CustomWidgets.popUpMenuItem('date', 'By date'),
-                    CustomWidgets.popUpMenuItem('priority', 'By priority'),
+                    PopupMenuButton<String>(
+                      offset: Offset(-10, 0),
+                      tooltip: 'Sort tasks',
+                      itemBuilder: (context) => <PopupMenuEntry<String>>[
+                        CustomWidgets.popUpMenuItem('date', 'By date'),
+                        CustomWidgets.popUpMenuItem('priority', 'By priority'),
+                      ],
+
+                      icon: Icon(Icons.swap_vert_outlined, size: 25),
+                    ),
                   ],
-
-                  icon: Icon(Icons.swap_vert_outlined, size: 25),
-                ),
-              ],
+                );
+              },
             ),
 
-            // SizedBox(height: size.height * 0.01),
             Expanded(
               child: BlocBuilder<TaskBloc, TaskState>(
                 builder: (context, state) {
@@ -112,7 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   if (state is TaskLoaded) {
-                    if (state.tasks.isEmpty) {
+                    final tasks = state.filteredTasks;
+                    if (tasks.isEmpty) {
                       return Center(
                         child: const Text(
                           'Add tasks!',
@@ -126,9 +120,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
 
                     return ListView.builder(
-                      itemCount: state.tasks.length,
-                      itemBuilder: (context, index) {
-                        return TaskCard(task: state.tasks[index]);
+                      itemCount: tasks.length,
+                      itemBuilder: (_, i) {
+                        return TaskCard(task: tasks[i]);
                       },
                     );
                   }

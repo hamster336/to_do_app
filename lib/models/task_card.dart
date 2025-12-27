@@ -16,7 +16,6 @@ class TaskCard extends StatelessWidget {
 
     return SizedBox(
       width: size.width,
-      height: size.longestSide * 0.11,
       child: Card(
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(
@@ -27,17 +26,19 @@ class TaskCard extends StatelessWidget {
             showModalBottomSheet(
               isScrollControlled: true,
               isDismissible: false,
-              context: context, 
+              context: context,
               builder: (context) {
-                return TaskEditorSheet(initialTask: task,);
+                return TaskEditorSheet(initialTask: task);
               },
             );
           },
 
           leading: InkWell(
-            onTap: () => context.read<TaskBloc>().add(
-              UpdateTask(task: task.copyWith(isCompleted: !task.isCompleted)),
-            ),
+            onTap: () {
+              context.read<TaskBloc>().add(
+                UpdateTask(task: task.copyWith(isCompleted: !task.isCompleted)),
+              );
+            },
             child: Icon(
               (task.isCompleted)
                   ? Icons.check_box_rounded
@@ -47,21 +48,23 @@ class TaskCard extends StatelessWidget {
 
           title: AnimatedLineThrough(
             isCrossed: task.isCompleted,
-            duration: Duration(milliseconds: 200),
+            duration: Duration(milliseconds: 400),
             child: Text(
               task.title,
               style: TextStyle(
                 color: (task.isCompleted) ? Colors.grey : null,
                 fontSize: 25,
                 fontWeight: FontWeight.w600,
-                fontFamily: 'Afacad', 
+                fontFamily: 'Afacad',
                 letterSpacing: 1,
               ),
+              maxLines: 1,
+              overflow: .ellipsis,
             ),
           ),
 
           subtitle: Text(
-            '${task.createdAt}',
+            getTime(context, task.createdAt),
             style: TextStyle(
               fontFamily: 'Afacad',
               fontSize: 16,
@@ -82,5 +85,37 @@ class TaskCard extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  // formate time according to the current date and the created date of the task
+  String getTime(BuildContext context, DateTime time) {
+    DateTime now = DateTime.now();
+
+    final today = DateTime(now.year, now.month, now.day);
+    final taskDate = DateTime(time.year, time.month, time.day);
+    final difference = today.difference(taskDate).inDays;
+
+    List<String> months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sept',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    if (difference == 0) {
+      return TimeOfDay(hour: time.hour, minute: time.minute).format(context);
+    }
+    if (difference == 1) return 'Yesterday';
+    if (time.year < now.year) return '${time.day}/${time.month}/${time.year}';
+
+    return '${time.day} $months[time.month - 1]';
   }
 }
