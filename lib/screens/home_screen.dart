@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:to_do_app/models/task.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/bloc/task_bloc.dart';
 import 'package:to_do_app/models/task_card.dart';
 import 'package:to_do_app/models/custom_widgets.dart';
+import 'package:to_do_app/models/task_editor_sheet.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<TaskBloc>().add(LoadTasks());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +33,7 @@ class HomeScreen extends StatelessWidget {
             fontSize: 30,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.75,
-            // fontFamily: 'Afacad',
+            fontFamily: 'Afacad',
           ),
         ),
         centerTitle: true,
@@ -92,13 +105,35 @@ class HomeScreen extends StatelessWidget {
 
             // SizedBox(height: size.height * 0.01),
             Expanded(
-              child: ListView.builder(
-                physics: BouncingScrollPhysics(),
-                itemCount: 10,
-                itemBuilder: (context, index) {
-                  return TaskCard(
-                    task: Task(task: 'DemoTask', createdAt: '01 Jan 2026'),
-                  );
+              child: BlocBuilder<TaskBloc, TaskState>(
+                builder: (context, state) {
+                  if (state is TaskLoading) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+
+                  if (state is TaskLoaded) {
+                    if (state.tasks.isEmpty) {
+                      return Center(
+                        child: const Text(
+                          'Add tasks!',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontFamily: 'Afacad',
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      );
+                    }
+
+                    return ListView.builder(
+                      itemCount: state.tasks.length,
+                      itemBuilder: (context, index) {
+                        return TaskCard(task: state.tasks[index]);
+                      },
+                    );
+                  }
+
+                  return const SizedBox.shrink();
                 },
               ),
             ),
@@ -107,11 +142,16 @@ class HomeScreen extends StatelessWidget {
       ),
 
       floatingActionButton: ElevatedButton(
-        onPressed: () => CustomWidgets.showModalSheet(
-          context,
-          Task(task: '', createdAt: 'now'),
-          size,
-        ),
+        onPressed: () {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            isDismissible: false,
+            context: context,
+            builder: (context) {
+              return TaskEditorSheet();
+            },
+          );
+        },
 
         style: ElevatedButton.styleFrom(
           shape: CircleBorder(),

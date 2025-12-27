@@ -15,10 +15,11 @@ class HiveTaskRepository implements TaskRepository {
   }
   
   @override
-  Future<void> addTask(Task task) async{
+  Future<Task> addTask(Task task) async{
     final key = await box.add(task);
     task.id = key;
     await task.save();
+    return task;
   }
   
   
@@ -28,9 +29,7 @@ class HiveTaskRepository implements TaskRepository {
   }
 
   @override
-  Future<void> deleteTask(List<int> keys) async {
-    for (var key in keys) {
+  Future<void> deleteTask(int key) async {
       await box.delete(key);
-    }
   }
 }

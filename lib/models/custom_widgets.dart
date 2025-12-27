@@ -1,10 +1,13 @@
+import 'package:animated_line_through/animated_line_through.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:to_do_app/bloc/task_bloc.dart';
 import 'package:to_do_app/models/task.dart';
 
 class CustomWidgets {
   // ModalBottonSheet to add or edit tasks
   static void showModalSheet(BuildContext context, Task task, Size size) {
-    final controller = TextEditingController(text: task.task);
+    final controller = TextEditingController(text: task.title);
 
     showModalBottomSheet(
       isScrollControlled: true,
@@ -28,28 +31,33 @@ class CustomWidgets {
                     mainAxisAlignment: .center,
                     children: [
                       Icon(
-                        Icons.check_box_outline_blank,
+                        (task.isCompleted)
+                            ? Icons.check_box_rounded
+                            : Icons.check_box_outline_blank,
                       ), // set task as complete or incomplete
 
                       SizedBox(width: size.width * 0.03),
 
                       // textField to enter the task
                       Expanded(
-                        child: TextField(
-                          maxLines: null,
-                          autofocus: true,
-                          controller: controller,
-                          textCapitalization: TextCapitalization.sentences,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.5,
-                            fontFamily: 'Afacad',
-                          ),
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Long Long text for demo',
-                            hintStyle: TextStyle(color: Colors.grey.shade500),
+                        child: AnimatedLineThrough(
+                          isCrossed: task.isCompleted,
+                          duration: Duration(milliseconds: 200),
+                          child: TextField(
+                            maxLines: null,
+                            autofocus: true,
+                            controller: controller,
+                            textCapitalization: TextCapitalization.sentences,
+                            style: TextStyle(
+                              color: (task.isCompleted) ? Colors.grey : null,
+                              fontSize: 20,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                              fontFamily: 'Afacad',
+                            ),
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                            ),
                           ),
                         ),
                       ),
@@ -89,7 +97,19 @@ class CustomWidgets {
 
                       // done adding task
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          if (controller.text.toString().trim().isNotEmpty) {
+                            task.title = controller.text.toString();
+                            if (task.id != null) {
+                              context.read<TaskBloc>().add(
+                                UpdateTask(task: task),
+                              );
+                            } else {
+                              context.read<TaskBloc>().add(AddTask(task: task));
+                            }
+                          }
+                          Navigator.pop(context);
+                        },
                         child: Text(
                           'Done',
                           style: TextStyle(
