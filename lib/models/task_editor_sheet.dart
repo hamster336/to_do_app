@@ -47,13 +47,17 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
             crossAxisAlignment: .start,
             children: [
               Text(
-                'Created on: ${(isUpdating) ? getTime(context, widget.initialTask!.createdAt) : getTime(context, DateTime.now())}',
+                'Created on: ${
+                (isUpdating) 
+                ? getTime(context, widget.initialTask!.createdAt) 
+                : getTime(context, DateTime.now())}',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
 
               Row(
                 mainAxisAlignment: .center,
                 children: [
+                  // set and task as complete or incomplete
                   InkWell(
                     child: Icon(
                       (_isCompleted)
@@ -64,7 +68,7 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
                     onTap: () {
                       setState(() => _isCompleted = !_isCompleted);
                     },
-                  ), // set task as complete or incomplete
+                  ),
 
                   SizedBox(width: size.width * 0.03),
 
@@ -169,6 +173,14 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
     // delete the existing task if title is removed
     if (text.isEmpty && isChanged && isUpdating) {
       context.read<TaskBloc>().add(DeleteTask(task: widget.initialTask!));
+    }
+
+    if (widget.initialTask != null) {
+      context.read<TaskBloc>().add(
+        UpdateTask(
+          task: widget.initialTask!.copyWith(isCompleted: _isCompleted),
+        ),
+      );
     }
   }
 

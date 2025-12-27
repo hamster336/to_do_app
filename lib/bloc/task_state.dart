@@ -9,25 +9,51 @@ final class TaskLoading extends TaskState {}
 final class TaskLoaded extends TaskState {
   final List<Task> tasks;
   final TaskFilter filter;
-  TaskLoaded({required this.tasks, this.filter = TaskFilter.all});
+  final TaskSort sort;
+  TaskLoaded({
+    required this.tasks,
+    this.filter = TaskFilter.all,
+    this.sort = TaskSort.newest,
+  });
 
   // filter the loaded tasks
-  List<Task> get filteredTasks {
+  List<Task> get displayTasks {
     switch (filter) {
       case TaskFilter.active:
-        return tasks.where((t) => !t.isCompleted).toList();
+        final list = tasks.where((t) => !t.isCompleted).toList();
+        return _sort(list);
       case TaskFilter.completed:
-        return tasks.where((t) => t.isCompleted).toList();
+        final list = tasks.where((t) => t.isCompleted).toList();
+        return _sort(list);
       case TaskFilter.all:
-        return tasks;
+        return _sort(tasks);
+    }
+  }
+
+  // sort the tasks
+  List<Task> _sort(List<Task> list) {
+    switch (sort) {
+      case TaskSort.oldest:
+        list.sort((a, b) => a.createdAt.compareTo(b.createdAt));
+        return list;
+      case TaskSort.newest:
+        list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        return list;
+      case TaskSort.highPriority:
+        list.sort((a, b) => a.priority.index.compareTo(b.priority.index));
+        return list;
+      case TaskSort.lowPriority:
+        list.sort((a, b) => b.priority.index.compareTo(a.priority.index));
+        return list;
     }
   }
 
   // copyWith method
-  TaskLoaded copyWith({List<Task>? tasks, TaskFilter? filter}) {
+  TaskLoaded copyWith({List<Task>? tasks, TaskFilter? filter, TaskSort? sort}) {
     return TaskLoaded(
       tasks: tasks ?? this.tasks,
       filter: filter ?? this.filter,
+      sort: sort ?? this.sort
     );
   }
 }

@@ -17,6 +17,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<UpdateTask>(_updateTask);
     on<DeleteTask>(_deleteTask);
     on<ChangeTaskFilter>(_filterTasks);
+    on<SortTask>(_sortTasks);
   }
 
   // load tasks from storage
@@ -84,5 +85,13 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
     final current = state as TaskLoaded;
     emit(current.copyWith(filter: event.filter));
+  }
+
+  // sort the tasks in different orders
+  Future<void> _sortTasks(SortTask event, Emitter<TaskState> emit) async {
+    if (state is! TaskLoaded) return;
+
+    final current = state as TaskLoaded;
+    emit(current.copyWith(sort: event.sort));
   }
 }

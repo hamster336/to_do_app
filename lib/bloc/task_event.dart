@@ -24,4 +24,7 @@ final class ChangeTaskFilter extends TaskEvent {
   ChangeTaskFilter({required this.filter});
 }
 
-final class ToggleTaskCompletion extends TaskEvent {}
+final class SortTask extends TaskEvent {
+  final TaskSort sort;
+  SortTask({required this.sort});
+}

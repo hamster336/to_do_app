@@ -3,3 +3,10 @@ enum TaskFilter {
   active,
   completed
 }
+
+enum TaskSort {
+  oldest,
+  newest,
+  highPriority,
+  lowPriority
+}

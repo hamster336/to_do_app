@@ -48,12 +48,12 @@ class TaskCard extends StatelessWidget {
 
           title: AnimatedLineThrough(
             isCrossed: task.isCompleted,
-            duration: Duration(milliseconds: 400),
+            duration: Duration(milliseconds: 300),
             child: Text(
               task.title,
               style: TextStyle(
                 color: (task.isCompleted) ? Colors.grey : null,
-                fontSize: 25,
+                fontSize: 20,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'Afacad',
                 letterSpacing: 1,
@@ -72,6 +72,7 @@ class TaskCard extends StatelessWidget {
             ),
           ),
 
+          // set task priority
           trailing: PopupMenuButton<String>(
             tooltip: 'Set Priority',
             itemBuilder: (context) => <PopupMenuEntry<String>>[
@@ -79,6 +80,29 @@ class TaskCard extends StatelessWidget {
               CustomWidgets.popUpMenuItem('med', 'Medium'),
               CustomWidgets.popUpMenuItem('low', 'Low'),
             ],
+            onSelected: (value) {
+              switch (value) {
+                case 'high':
+                  context.read<TaskBloc>().add(
+                    UpdateTask(task: task.copyWith(priority: Priority.high)),
+                  );
+                  break;
+                case 'med':
+                  context.read<TaskBloc>().add(
+                    UpdateTask(task: task.copyWith(priority: Priority.medium)),
+                  );
+                  break;
+                case 'low':
+                  context.read<TaskBloc>().add(
+                    UpdateTask(task: task.copyWith(priority: Priority.low)),
+                  );
+                  break;
+                default:
+                  context.read<TaskBloc>().add(
+                    UpdateTask(task: task.copyWith(priority: Priority.low)),
+                  );
+              }
+            },
 
             icon: Icon(Icons.keyboard_arrow_down),
           ),

@@ -17,17 +17,18 @@ class CustomWidgets {
     required String label,
     required bool isSelected,
     required VoidCallback onTap,
+    required Size size,
   }) {
     return ElevatedButton(
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(horizontal: 20),
-        foregroundColor: isSelected ? Colors.orange : null,
+        padding: EdgeInsets.symmetric(horizontal: 15),
+        foregroundColor: isSelected ? Colors.orange.shade600 : null,
       ),
       child: Text(
         label,
         style: TextStyle(
-          fontSize: 18,
+          fontSize: size.shortestSide * 0.035,
           fontFamily: 'Afacad',
           letterSpacing: 0.5,
           fontWeight: FontWeight.w600,

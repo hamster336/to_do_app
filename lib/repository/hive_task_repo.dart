@@ -8,28 +8,27 @@ class HiveTaskRepository implements TaskRepository {
   HiveTaskRepository(this.box);
 
   @override
-  Future<List<Task>> loadtasks() async{
+  Future<List<Task>> loadtasks() async {
     final list = box.values.toList();
-    list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+    // list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
     return list;
   }
-  
+
   @override
-  Future<Task> addTask(Task task) async{
+  Future<Task> addTask(Task task) async {
     final key = await box.add(task);
     task.id = key;
     await task.save();
     return task;
   }
-  
-  
+
   @override
-  Future<void> updateTask(Task task) async{
+  Future<void> updateTask(Task task) async {
     await box.put(task.id, task);
   }
 
   @override
   Future<void> deleteTask(int key) async {
-      await box.delete(key);
+    await box.delete(key);
   }
 }

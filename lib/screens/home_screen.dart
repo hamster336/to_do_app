@@ -56,40 +56,80 @@ class _HomeScreenState extends State<HomeScreen> {
                 return Row(
                   mainAxisAlignment: .start,
                   children: [
+                    // show all tasks
                     CustomWidgets.filterButtons(
                       label: 'All',
                       isSelected: currentFilter == TaskFilter.all,
                       onTap: () => context.read<TaskBloc>().add(
                         ChangeTaskFilter(filter: TaskFilter.all),
                       ),
+                      size: size,
                     ),
                     const SizedBox(width: 10),
+
+                    // show incomplete tasks only
                     CustomWidgets.filterButtons(
                       label: 'Active',
                       isSelected: currentFilter == TaskFilter.active,
                       onTap: () => context.read<TaskBloc>().add(
                         ChangeTaskFilter(filter: TaskFilter.active),
                       ),
+                      size: size,
                     ),
                     const SizedBox(width: 10),
+
+                    // show completed tasks
                     CustomWidgets.filterButtons(
                       label: 'Completed',
                       isSelected: currentFilter == TaskFilter.completed,
                       onTap: () => context.read<TaskBloc>().add(
                         ChangeTaskFilter(filter: TaskFilter.completed),
                       ),
+                      size: size,
                     ),
 
                     Spacer(),
 
+                    // sort tasks by date or priority
                     PopupMenuButton<String>(
                       offset: Offset(-10, 0),
                       tooltip: 'Sort tasks',
                       itemBuilder: (context) => <PopupMenuEntry<String>>[
-                        CustomWidgets.popUpMenuItem('date', 'By date'),
-                        CustomWidgets.popUpMenuItem('priority', 'By priority'),
+                        CustomWidgets.popUpMenuItem('old first', 'Oldest'),
+                        CustomWidgets.popUpMenuItem('new first', 'Newest'),
+                        CustomWidgets.popUpMenuItem(
+                          'high priority',
+                          'Higher priority',
+                        ),
+                        CustomWidgets.popUpMenuItem(
+                          'low priority',
+                          'Lower priority',
+                        ),
                       ],
-
+                      onSelected: (value) {
+                        switch (value) {
+                          case 'old first':
+                            context.read<TaskBloc>().add(
+                              SortTask(sort: TaskSort.oldest),
+                            );
+                            break;
+                          case 'new first':
+                            context.read<TaskBloc>().add(
+                              SortTask(sort: TaskSort.newest),
+                            );
+                            break;
+                          case 'high priority':
+                            context.read<TaskBloc>().add(
+                              SortTask(sort: TaskSort.highPriority),
+                            );
+                            break;
+                          case 'low priority':
+                            context.read<TaskBloc>().add(
+                              SortTask(sort: TaskSort.lowPriority),
+                            );
+                            break;
+                        }
+                      },
                       icon: Icon(Icons.swap_vert_outlined, size: 25),
                     ),
                   ],
@@ -105,11 +145,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
 
                   if (state is TaskLoaded) {
-                    final tasks = state.filteredTasks;
+                    final tasks = state.displayTasks;
                     if (tasks.isEmpty) {
                       return Center(
-                        child: const Text(
-                          'Add tasks!',
+                        child: Text(
+                          (state.filter == TaskFilter.all)
+                              ? 'Add tasks!'
+                              : 'No available tasks',
                           style: TextStyle(
                             fontSize: 20,
                             fontFamily: 'Afacad',
@@ -135,6 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
       ),
 
+      // add new task
       floatingActionButton: ElevatedButton(
         onPressed: () {
           showModalBottomSheet(
