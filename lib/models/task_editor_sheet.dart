@@ -47,10 +47,7 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
             crossAxisAlignment: .start,
             children: [
               Text(
-                'Created on: ${
-                (isUpdating) 
-                ? getTime(context, widget.initialTask!.createdAt) 
-                : getTime(context, DateTime.now())}',
+                'Created on: ${(isUpdating) ? getTime(context, widget.initialTask!.createdAt) : getTime(context, DateTime.now())}',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
 
@@ -153,9 +150,12 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
   void _save(bool isUpdating) {
     final text = _controller.text.trim();
 
-    final isChanged = (isUpdating) ? text != widget.initialTask!.title : true;
+    final isChanged = (isUpdating)
+        ? (text != widget.initialTask!.title ||
+              _isCompleted != widget.initialTask!.isCompleted)
+        : true; // true for a new task or if title or isCompleted of an existing task is changed
 
-    // add or update if the textField in not empty and the title of the task is changed
+    // add or update if the textField in not empty and the title or isCompleted of the task is changed
     if (text.isNotEmpty && isChanged) {
       final task = (isUpdating)
           ? widget.initialTask!.copyWith(title: text, isCompleted: _isCompleted)
@@ -173,14 +173,6 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
     // delete the existing task if title is removed
     if (text.isEmpty && isChanged && isUpdating) {
       context.read<TaskBloc>().add(DeleteTask(task: widget.initialTask!));
-    }
-
-    if (widget.initialTask != null) {
-      context.read<TaskBloc>().add(
-        UpdateTask(
-          task: widget.initialTask!.copyWith(isCompleted: _isCompleted),
-        ),
-      );
     }
   }
 

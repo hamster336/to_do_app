@@ -26,7 +26,7 @@ final class TaskLoaded extends TaskState {
         final list = tasks.where((t) => t.isCompleted).toList();
         return _sort(list);
       case TaskFilter.all:
-        return _sort(tasks);
+        return _sort(List<Task>.from(tasks));   // do not sort tasks directly, it should not me mutated
     }
   }
 
@@ -53,7 +53,7 @@ final class TaskLoaded extends TaskState {
     return TaskLoaded(
       tasks: tasks ?? this.tasks,
       filter: filter ?? this.filter,
-      sort: sort ?? this.sort
+      sort: sort ?? this.sort,
     );
   }
 }
