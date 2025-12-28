@@ -12,6 +12,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   final TaskRepository repository;
 
   TaskBloc(this.repository) : super(TaskLoading()) {
+    // event handlers
     on<LoadTasks>(_loadTask);
     on<AddTask>(_addTask);
     on<UpdateTask>(_updateTask);
@@ -42,7 +43,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     final task = await repository.addTask(event.task);
 
     // update the in-memory
-    final updatedTasks = List<Task>.from(currentState.tasks)..insert(0, task);
+    final updatedTasks = List<Task>.from(currentState.tasks)..add(task);
 
     emit(currentState.copyWith(tasks: updatedTasks));
   }

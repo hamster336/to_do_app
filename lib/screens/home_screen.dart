@@ -28,16 +28,36 @@ class _HomeScreenState extends State<HomeScreen> {
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         forceMaterialTransparency: true,
-        title: const Text(
-          'Tasks',
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.75,
-            fontFamily: 'Afacad',
-          ),
+        title: Row(
+          mainAxisAlignment: .spaceBetween,
+          children: [
+            const Text(
+              'Tasks',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.75,
+                fontFamily: 'Afacad',
+              ),
+            ),
+
+            // add new task
+            IconButton(
+              onPressed: () {
+                showModalBottomSheet(
+                  isScrollControlled: true,
+                  isDismissible: false,
+                  context: context,
+                  builder: (context) {
+                    return TaskEditorSheet();
+                  },
+                );
+              },
+              icon: Icon(Icons.add_outlined, size: 25),
+            ),
+          ],
         ),
-        centerTitle: true,
+        // centerTitle: true,
       ),
 
       body: Padding(
@@ -162,6 +182,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     }
 
                     return ListView.builder(
+                      physics: BouncingScrollPhysics(),
                       itemCount: tasks.length,
                       itemBuilder: (_, i) {
                         return TaskCard(
@@ -178,28 +199,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-      ),
-
-      // add new task
-      floatingActionButton: ElevatedButton(
-        onPressed: () {
-          showModalBottomSheet(
-            isScrollControlled: true,
-            isDismissible: false,
-            context: context,
-            builder: (context) {
-              return TaskEditorSheet();
-            },
-          );
-        },
-
-        style: ElevatedButton.styleFrom(
-          shape: CircleBorder(),
-          padding: EdgeInsets.all(10),
-          backgroundColor: Colors.orange.shade600,
-        ),
-
-        child: Icon(Icons.add, size: 35, color: Colors.white),
       ),
     );
   }

@@ -31,7 +31,7 @@ class CustomWidgets {
           fontSize: size.shortestSide * 0.035,
           fontFamily: 'Afacad',
           letterSpacing: 0.5,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w500,
         ),
       ),
     );

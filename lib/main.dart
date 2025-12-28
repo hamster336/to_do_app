@@ -42,11 +42,33 @@ class MyApp extends StatelessWidget {
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'To Do',
-          darkTheme: ThemeData.dark(),
+          themeMode: ThemeMode.system,
           theme: ThemeData(
             useMaterial3: true,
             fontFamily: 'Afacad',
-            colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+            colorScheme: .fromSeed(
+              // seedColor: Colors.orange.shade700,
+              seedColor: Colors.deepPurple,
+              brightness: Brightness.light,
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black, // text & icon
+              ),
+            ),
+          ),
+          darkTheme: ThemeData(
+            useMaterial3: true,
+            brightness: Brightness.dark,
+            colorScheme: ColorScheme.fromSeed(
+              seedColor: Colors.deepPurple,
+              brightness: Brightness.dark,
+            ),
+            elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.white, // text & icon
+              ),
+            ),
           ),
           home: const HomeScreen(),
         ),

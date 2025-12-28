@@ -48,7 +48,11 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
             children: [
               Text(
                 'Created on: ${(isUpdating) ? getTime(context, widget.initialTask!.createdAt) : getTime(context, DateTime.now())}',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  fontFamily: 'Afacad',
+                ),
               ),
 
               Row(
@@ -110,6 +114,7 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
                             color: Colors.blue,
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
+                            fontFamily: 'Afacad',
                           ),
                         ),
 
@@ -132,6 +137,7 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
                         color: Colors.orange.shade600,
                         fontSize: 20,
                         fontWeight: FontWeight.w500,
+                        fontFamily: 'Afacad',
                       ),
                     ),
                   ),
@@ -179,18 +185,18 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
   // format time
   String getTime(BuildContext context, DateTime time) {
     List<String> months = [
-      'January',
-      'February',
-      'March',
-      'April',
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
       'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sept',
+      'Oct',
+      'Nov',
+      'Dec',
     ];
     return '${TimeOfDay.fromDateTime(time).format(context)} | ${'${months[time.month - 1]} ${time.day}, ${time.year}'}';
   }
