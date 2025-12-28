@@ -164,7 +164,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     return ListView.builder(
                       itemCount: tasks.length,
                       itemBuilder: (_, i) {
-                        return TaskCard(task: tasks[i]);
+                        return TaskCard(
+                          key: ValueKey(tasks[i].id),
+                          task: tasks[i],
+                        );
                       },
                     );
                   }

@@ -44,7 +44,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     // update the in-memory
     final updatedTasks = List<Task>.from(currentState.tasks)..insert(0, task);
 
-    emit(TaskLoaded(tasks: updatedTasks));
+    emit(currentState.copyWith(tasks: updatedTasks));
   }
 
   // update an existing task
@@ -57,9 +57,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
       return task.id == event.task.id ? event.task : task;
     }).toList();
 
-    emit(TaskLoaded(tasks: updateTasks));
-
     await repository.updateTask(event.task);
+    emit(
+      currentState.copyWith(tasks: updateTasks),
+    ); // keep the filter and the sort same
   }
 
   // delete a task
@@ -75,8 +76,8 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
         .where((task) => task.id != event.task.id)
         .toList();
 
-    emit(TaskLoaded(tasks: updatedTasks));
     await repository.deleteTask(taskId);
+    emit(currentState.copyWith(tasks: updatedTasks));
   }
 
   // filter tasks by their status of completion
