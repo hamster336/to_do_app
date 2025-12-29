@@ -19,6 +19,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<DeleteTask>(_deleteTask);
     on<ChangeTaskFilter>(_filterTasks);
     on<SortTask>(_sortTasks);
+    on<EnterSelectionMode>(_enterSelectionMode);
+    on<ToggleTaskSelection>(_toggleTaskSelection);
+    on<DeleteSelectedTasks>(_deleteSelectedTasks);
+    on<ExitSelectionmode>(_exitSelectionMode);
   }
 
   // load tasks from storage
@@ -27,7 +31,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
     try {
       final tasks = await repository.loadtasks();
-      emit(TaskLoaded(tasks: tasks));
+      emit(TaskLoaded(tasks: tasks, selectionMode: false, selectedTaskIds: {}));
     } catch (ex) {
       emit(TaskError(message: 'Failed to LoadTasks'));
     }
@@ -95,5 +99,79 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
 
     final current = state as TaskLoaded;
     emit(current.copyWith(sort: event.sort));
+  }
+
+  // enter task selection mode
+  Future<void> _enterSelectionMode(
+    EnterSelectionMode event,
+    Emitter<TaskState> emit,
+  ) async {
+    final currentState = state as TaskLoaded;
+
+    emit(
+      currentState.copyWith(
+        selectionMode: true,
+        selectedTaskIds: {event.taskId},
+      ),
+    );
+  }
+
+  // select or deselect a task, do not exit selection mode even if all the tasks are deselected
+  Future<void> _toggleTaskSelection(
+    ToggleTaskSelection event,
+    Emitter<TaskState> emit,
+  ) async {
+    final currentState = state as TaskLoaded;
+
+    final selected = Set<int>.from(currentState.selectedTaskIds);
+
+    if (selected.contains(event.taskId)) {
+      selected.remove(event.taskId);
+    } else {
+      selected.add(event.taskId);
+    }
+
+    emit(
+      currentState.copyWith(
+        selectedTaskIds: selected,
+        // selectionMode: selected.isNotEmpty,
+      ),
+    );
+  }
+
+  // delete selected tasks
+  Future<void> _deleteSelectedTasks(
+    DeleteSelectedTasks event,
+    Emitter<TaskState> emit,
+  ) async {
+    final currentState = state as TaskLoaded;
+
+    final remainingTasks = currentState.tasks
+        .where((task) => !currentState.selectedTaskIds.contains(task.id))
+        .toList();
+
+    for (var task in currentState.tasks) {
+      if (currentState.selectedTaskIds.contains(task.id)) {
+        await repository.deleteTask(task.id!);
+      }
+    }
+
+    emit(
+      currentState.copyWith(
+        tasks: remainingTasks,
+        selectionMode: false,
+        selectedTaskIds: const {},
+      ),
+    );
+  }
+
+  // exit selectionMode
+  Future<void> _exitSelectionMode(
+    ExitSelectionmode event,
+    Emitter<TaskState> emit,
+  ) async {
+    final currentState = state as TaskLoaded;
+
+    emit(currentState.copyWith(selectionMode: false, selectedTaskIds: {}));
   }
 }

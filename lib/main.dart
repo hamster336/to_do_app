@@ -30,12 +30,14 @@ class MyApp extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider<TaskRepository>(
+          // injecting repo
           create: (_) => HiveTaskRepository(Hive.box<Task>(taskBox)),
         ),
       ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
+            // injection bloc
             create: (context) => TaskBloc(context.read<TaskRepository>()),
           ),
         ],
@@ -51,21 +53,25 @@ class MyApp extends StatelessWidget {
               seedColor: Colors.deepPurple,
               brightness: Brightness.light,
             ),
+            cardTheme: CardThemeData(surfaceTintColor: Colors.grey.shade400),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
+                textStyle: TextStyle(fontFamily: 'Afacad'),
                 foregroundColor: Colors.black, // text & icon
               ),
             ),
           ),
           darkTheme: ThemeData(
             useMaterial3: true,
-            brightness: Brightness.dark,
+            fontFamily: 'Afacad',
             colorScheme: ColorScheme.fromSeed(
               seedColor: Colors.deepPurple,
               brightness: Brightness.dark,
             ),
+            cardTheme: CardThemeData(surfaceTintColor: Colors.grey.shade100),
             elevatedButtonTheme: ElevatedButtonThemeData(
               style: ElevatedButton.styleFrom(
+                textStyle: TextStyle(fontFamily: 'Afacad'),
                 foregroundColor: Colors.white, // text & icon
               ),
             ),

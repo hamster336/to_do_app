@@ -36,4 +36,23 @@ class CustomWidgets {
       ),
     );
   }
+
+  static AlertDialog dialogBox({
+    required BuildContext context,
+    required String title,
+    required String subtitle,
+    required Function func,
+  }) {
+    return AlertDialog(
+      title: Text(title),
+      content: Text(subtitle),
+      actions: [
+        ElevatedButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(onPressed: () => func, child: const Text('Yes')),
+      ],
+    );
+  }
 }

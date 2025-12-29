@@ -41,19 +41,85 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // add new task
-            IconButton(
-              onPressed: () {
-                showModalBottomSheet(
-                  isScrollControlled: true,
-                  isDismissible: false,
-                  context: context,
-                  builder: (context) {
-                    return TaskEditorSheet();
-                  },
+            BlocBuilder<TaskBloc, TaskState>(
+              builder: (context, state) {
+                if (state is! TaskLoaded) return const SizedBox.shrink();
+
+                if (!state.selectionMode) {
+                  // add new task
+                  return IconButton(
+                    onPressed: () {
+                      showModalBottomSheet(
+                        isScrollControlled: true,
+                        isDismissible: false,
+                        context: context,
+                        builder: (context) {
+                          return TaskEditorSheet();
+                        },
+                      );
+                    },
+                    icon: Icon(Icons.add_outlined, size: 25),
+                  );
+                }
+
+                // exit selection Mode or delete selected tasks
+                return Row(
+                  children: [
+                    IconButton(
+                      onPressed: () =>
+                          context.read<TaskBloc>().add(ExitSelectionmode()),
+                      icon: Icon(Icons.cancel_outlined, size: 25),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        showDialog(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: Text(
+                              'Delete Tasks',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            content: Text(
+                              'Are you sure you want to delete the selected tasks?',
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            actions: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  context.read<TaskBloc>().add(
+                                    ExitSelectionmode(),
+                                  );
+                                },
+                                child: const Text(
+                                  'Cancel',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  context.read<TaskBloc>().add(
+                                    DeleteSelectedTasks(),
+                                  );
+                                  Navigator.pop(context);
+                                },
+                                child: const Text(
+                                  'Yes',
+                                  style: TextStyle(color: Colors.red),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                      icon: Icon(Icons.delete_outline_rounded, size: 25),
+                    ),
+                  ],
                 );
               },
-              icon: Icon(Icons.add_outlined, size: 25),
             ),
           ],
         ),
@@ -157,6 +223,10 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
 
+            // if((bloc.state as TaskLoaded).selectionMode) Row(children: [
+
+            // ],
+            // ),
             Expanded(
               child: BlocBuilder<TaskBloc, TaskState>(
                 builder: (context, state) {

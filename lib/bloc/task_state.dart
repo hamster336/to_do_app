@@ -10,10 +10,15 @@ final class TaskLoaded extends TaskState {
   final List<Task> tasks;
   final TaskFilter filter;
   final TaskSort sort;
+
+  final bool selectionMode;
+  final Set<int> selectedTaskIds;
   TaskLoaded({
     required this.tasks,
     this.filter = TaskFilter.all,
     this.sort = TaskSort.newest,
+    this.selectionMode = false,
+    this.selectedTaskIds = const {},
   });
 
   // filter the loaded tasks
@@ -26,7 +31,9 @@ final class TaskLoaded extends TaskState {
         final list = tasks.where((t) => t.isCompleted).toList();
         return _sort(list);
       case TaskFilter.all:
-        return _sort(List<Task>.from(tasks));   // do not sort tasks directly, it should not me mutated
+        return _sort(
+          List<Task>.from(tasks),
+        ); // do not sort tasks directly, it should not me mutated
     }
   }
 
@@ -49,11 +56,19 @@ final class TaskLoaded extends TaskState {
   }
 
   // copyWith method
-  TaskLoaded copyWith({List<Task>? tasks, TaskFilter? filter, TaskSort? sort}) {
+  TaskLoaded copyWith({
+    List<Task>? tasks,
+    TaskFilter? filter,
+    TaskSort? sort,
+    bool? selectionMode,
+    Set<int>? selectedTaskIds,
+  }) {
     return TaskLoaded(
       tasks: tasks ?? this.tasks,
       filter: filter ?? this.filter,
       sort: sort ?? this.sort,
+      selectionMode: selectionMode ?? this.selectionMode,
+      selectedTaskIds: selectedTaskIds ?? this.selectedTaskIds,
     );
   }
 }

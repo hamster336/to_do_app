@@ -28,3 +28,17 @@ final class SortTask extends TaskEvent {
   final TaskSort sort;
   SortTask({required this.sort});
 }
+
+final class EnterSelectionMode extends TaskEvent {
+  final int taskId;
+  EnterSelectionMode(this.taskId);
+}
+
+final class ToggleTaskSelection extends TaskEvent {
+  final int taskId;
+  ToggleTaskSelection(this.taskId);
+}
+
+final class ExitSelectionmode extends TaskEvent {}
+
+final class DeleteSelectedTasks extends TaskEvent {}

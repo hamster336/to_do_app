@@ -12,25 +12,39 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = context.read<TaskBloc>();
+    final state = bloc.state as TaskLoaded;
     final size = MediaQuery.of(context).size;
 
     return SizedBox(
       width: size.width,
       child: Card(
+        surfaceTintColor: (state.selectedTaskIds.contains(task.id!))
+            ? Colors.grey.shade700
+            : null,
+        elevation: (state.selectedTaskIds.contains(task.id!)) ? 5 : 2,
         child: ListTile(
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 15,
             vertical: 10,
           ),
+
+          onLongPress: () {
+            if (!state.selectionMode) bloc.add(EnterSelectionMode(task.id!));
+          },
           onTap: () {
-            showModalBottomSheet(
-              isScrollControlled: true,
-              isDismissible: false,
-              context: context,
-              builder: (context) {
-                return TaskEditorSheet(initialTask: task);
-              },
-            );
+            if (state.selectionMode) {
+              bloc.add(ToggleTaskSelection(task.id!));
+            } else {
+              showModalBottomSheet(
+                isScrollControlled: true,
+                isDismissible: false,
+                context: context,
+                builder: (context) {
+                  return TaskEditorSheet(initialTask: task);
+                },
+              );
+            }
           },
 
           leading: InkWell(
@@ -73,39 +87,51 @@ class TaskCard extends StatelessWidget {
           ),
 
           // set task priority
-          trailing: PopupMenuButton<String>(
-            tooltip: 'Set Priority',
-            itemBuilder: (context) => <PopupMenuEntry<String>>[
-              CustomWidgets.popUpMenuItem('high', 'High'),
-              CustomWidgets.popUpMenuItem('med', 'Medium'),
-              CustomWidgets.popUpMenuItem('low', 'Low'),
-            ],
-            onSelected: (value) {
-              switch (value) {
-                case 'high':
-                  context.read<TaskBloc>().add(
-                    UpdateTask(task: task.copyWith(priority: Priority.high)),
-                  );
-                  break;
-                case 'med':
-                  context.read<TaskBloc>().add(
-                    UpdateTask(task: task.copyWith(priority: Priority.medium)),
-                  );
-                  break;
-                case 'low':
-                  context.read<TaskBloc>().add(
-                    UpdateTask(task: task.copyWith(priority: Priority.low)),
-                  );
-                  break;
-                default:
-                  context.read<TaskBloc>().add(
-                    UpdateTask(task: task.copyWith(priority: Priority.low)),
-                  );
-              }
-            },
+          trailing: (!state.selectionMode)
+              ? PopupMenuButton<String>(
+                  tooltip: 'Set Priority',
+                  itemBuilder: (context) => <PopupMenuEntry<String>>[
+                    CustomWidgets.popUpMenuItem('high', 'High'),
+                    CustomWidgets.popUpMenuItem('med', 'Medium'),
+                    CustomWidgets.popUpMenuItem('low', 'Low'),
+                  ],
+                  onSelected: (value) {
+                    switch (value) {
+                      case 'high':
+                        context.read<TaskBloc>().add(
+                          UpdateTask(
+                            task: task.copyWith(priority: Priority.high),
+                          ),
+                        );
+                        break;
+                      case 'med':
+                        context.read<TaskBloc>().add(
+                          UpdateTask(
+                            task: task.copyWith(priority: Priority.medium),
+                          ),
+                        );
+                        break;
+                      case 'low':
+                        context.read<TaskBloc>().add(
+                          UpdateTask(
+                            task: task.copyWith(priority: Priority.low),
+                          ),
+                        );
+                        break;
+                      default:
+                        context.read<TaskBloc>().add(
+                          UpdateTask(
+                            task: task.copyWith(priority: Priority.low),
+                          ),
+                        );
+                    }
+                  },
 
-            icon: Icon(Icons.keyboard_arrow_down),
-          ),
+                  icon: Icon(Icons.keyboard_arrow_down),
+                )
+              : (state.selectedTaskIds.contains(task.id!))
+              ? Icon(Icons.check)
+              : null,
         ),
       ),
     );
