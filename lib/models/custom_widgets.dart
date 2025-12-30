@@ -24,7 +24,9 @@ class CustomWidgets {
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(horizontal: 15),
-        foregroundColor: isSelected ? const Color.fromARGB(255, 251, 140, 0) : null,
+        foregroundColor: isSelected
+            ? const Color.fromARGB(255, 251, 140, 0)
+            : null,
       ),
       child: Text(
         label,
@@ -62,7 +64,7 @@ class CustomWidgets {
     final date = await showDatePicker(
       context: context,
       initialDate: task?.dueDate ?? DateTime.now(),
-      firstDate: DateTime(2025),
+      firstDate: DateTime.now(),
       lastDate: DateTime(2100),
     );
 
