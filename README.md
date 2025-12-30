@@ -18,8 +18,8 @@ The app follows a clear separation of concerns:
 All user actions (add, update, delete, select, complete) are dispatched as events and processed by the relevant BLoC.
 
 Screenshots:
-![image alt](https://github.com/hamster336/to_do_app/blob/f7ae3a86bdaeb1edca37ea3484644797f40be7f7/screenshots/dark.png)
-![image alt](https://github.com/hamster336/to_do_app/blob/f7ae3a86bdaeb1edca37ea3484644797f40be7f7/screenshots/date_picker.png)
-![image alt](https://github.com/hamster336/to_do_app/blob/f7ae3a86bdaeb1edca37ea3484644797f40be7f7/screenshots/delete.png)
-![image alt](https://github.com/hamster336/to_do_app/blob/f7ae3a86bdaeb1edca37ea3484644797f40be7f7/screenshots/editing_task.png)
-![image alt](https://github.com/hamster336/to_do_app/blob/f7ae3a86bdaeb1edca37ea3484644797f40be7f7/screenshots/home_screen.png)
+<p align="left">
+  <img src="screenshots/home_screen.png" width="250">
+  <img src="screenshots/light_ui.png" width="250">
+  <img src="screenshots/dark.png" width="250">
+</p>
