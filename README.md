@@ -18,18 +18,22 @@ The app follows a clear separation of concerns:
 All user actions (add, update, delete, select, complete) are dispatched as events and processed by the relevant BLoC.
 
 Screenshots:
+
+Home Screen UI:
 <p align="left">
   <img src="screenshots/home_screen.png" width="200">
   <img src="screenshots/light_ui.png" width="200">
-  <img src="screenshots/dark.png" width="200">
 </p>
 
+Task editing:
 <p align="left">
   <img src="screenshots/date_picker.png" width="200">
   <img src="screenshots/editing.png" width="200">
 </p>
 
+Setting priority and sorting:
 <p align="left">
+  <img src="screenshots/dark.png" width="200">
   <img src="screenshots/priority.png" width="200">
   <img src="screenshots/sorting.png" width="200">
 </p>
