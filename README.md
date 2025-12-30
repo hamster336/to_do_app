@@ -26,7 +26,7 @@ Screenshots:
 
 <p align="left">
   <img src="screenshots/date_picker.png" width="200">
-  <img src="screenshots/editing_task.png" width="200">
+  <img src="screenshots/editing.png" width="200">
 </p>
 
 <p align="left">
