@@ -19,7 +19,17 @@ All user actions (add, update, delete, select, complete) are dispatched as event
 
 Screenshots:
 <p align="left">
-  <img src="screenshots/home_screen.png" width="250">
-  <img src="screenshots/light_ui.png" width="250">
-  <img src="screenshots/dark.png" width="250">
+  <img src="screenshots/home_screen.png" width="200">
+  <img src="screenshots/light_ui.png" width="200">
+  <img src="screenshots/dark.png" width="200">
+</p>
+
+<p align="left">
+  <img src="screenshots/date_picker.png" width="200">
+  <img src="screenshots/editing_task.png" width="200">
+</p>
+
+<p align="left">
+  <img src="screenshots/priority.png" width="200">
+  <img src="screenshots/sorting.png" width="200">
 </p>
