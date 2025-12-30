@@ -1,16 +1,18 @@
 # to_do_app
 
-A new Flutter project.
+A simple yet strucutred to-do application.
 
-## Getting Started
+Features:
+- Add, edit and remove tasks
+- Mark the tasks as complete or incomplete
+- Sort the tasks by date and priority
+- Filter tasks by their state of completion (All/Active/Completion)
+- Set due dates for tasks
 
-This project is a starting point for a Flutter application.
+This project uses BLoC for state management.
+The app follows a clear separation of concerns:
+- UI reacts to state changes
+- Business logic is handled inside BLoCs
+- Events drive all state transitions
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+All user actions (add, update, delete, select, complete) are dispatched as events and processed by the relevant BLoC.
