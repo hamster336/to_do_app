@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 fontSize: 30,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.75,
-                fontFamily: 'Afacad',
+                // fontFamily: 'Afacad',
               ),
             ),
 
@@ -65,11 +65,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 // exit selection Mode or delete selected tasks
                 return Row(
                   children: [
+                    // exit selection mode and deselect all tasks
                     IconButton(
                       onPressed: () =>
                           context.read<TaskBloc>().add(ExitSelectionmode()),
-                      icon: Icon(Icons.cancel_outlined, size: 25),
+                      icon: Icon(Icons.close, size: 25),
                     ),
+
+                    // delete selected tasks
                     IconButton(
                       onPressed: () {
                         showDialog(
@@ -123,7 +126,6 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-        // centerTitle: true,
       ),
 
       body: Padding(
@@ -223,10 +225,6 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
 
-            // if((bloc.state as TaskLoaded).selectionMode) Row(children: [
-
-            // ],
-            // ),
             Expanded(
               child: BlocBuilder<TaskBloc, TaskState>(
                 builder: (context, state) {

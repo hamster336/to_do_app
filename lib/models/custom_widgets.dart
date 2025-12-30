@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:to_do_app/models/task.dart';
 
 class CustomWidgets {
   // popUpMenu
@@ -23,7 +24,7 @@ class CustomWidgets {
       onPressed: onTap,
       style: ElevatedButton.styleFrom(
         padding: EdgeInsets.symmetric(horizontal: 15),
-        foregroundColor: isSelected ? Colors.orange.shade600 : null,
+        foregroundColor: isSelected ? const Color.fromARGB(255, 251, 140, 0) : null,
       ),
       child: Text(
         label,
@@ -54,5 +55,19 @@ class CustomWidgets {
         ElevatedButton(onPressed: () => func, child: const Text('Yes')),
       ],
     );
+  }
+
+  // show date picker
+  static Future<DateTime?> pickDueDate(BuildContext context, Task? task) async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: task?.dueDate ?? DateTime.now(),
+      firstDate: DateTime(2025),
+      lastDate: DateTime(2100),
+    );
+
+    if (date == null) return null;
+
+    return date;
   }
 }

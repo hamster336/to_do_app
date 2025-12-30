@@ -1,7 +1,9 @@
 import 'package:animated_line_through/animated_line_through.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:to_do_app/bloc/task_bloc.dart';
+import 'package:to_do_app/models/custom_widgets.dart';
 import 'package:to_do_app/models/task.dart';
 
 class TaskEditorSheet extends StatefulWidget {
@@ -15,6 +17,7 @@ class TaskEditorSheet extends StatefulWidget {
 class _TaskEditorSheetState extends State<TaskEditorSheet> {
   late final TextEditingController _controller;
   late bool _isCompleted;
+  DateTime? _dueDate;
 
   @override
   void initState() {
@@ -103,9 +106,14 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
               Row(
                 mainAxisAlignment: .spaceBetween,
                 children: [
-                  // set reminder (optional)
+                  // set reminder
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      _dueDate = await CustomWidgets.pickDueDate(
+                        context,
+                        widget.initialTask,
+                      );
+                    },
                     child: Row(
                       children: [
                         const Text(
@@ -158,17 +166,23 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
 
     final isChanged = (isUpdating)
         ? (text != widget.initialTask!.title ||
-              _isCompleted != widget.initialTask!.isCompleted)
-        : true; // true for a new task or if title or isCompleted of an existing task is changed
+              _isCompleted != widget.initialTask!.isCompleted ||
+              _dueDate != widget.initialTask!.dueDate)
+        : true; // true for a new task or if title or isCompleted or duedate of an existing task is changed
 
     // add or update if the textField in not empty and the title or isCompleted of the task is changed
     if (text.isNotEmpty && isChanged) {
       final task = (isUpdating)
-          ? widget.initialTask!.copyWith(title: text, isCompleted: _isCompleted)
+          ? widget.initialTask!.copyWith(
+              title: text,
+              isCompleted: _isCompleted,
+              dueDate: _dueDate,
+            )
           : Task(
               title: text,
               createdAt: DateTime.now(),
               isCompleted: _isCompleted,
+              dueDate: _dueDate,
             );
 
       context.read<TaskBloc>().add(
@@ -184,20 +198,6 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
 
   // format time
   String getTime(BuildContext context, DateTime time) {
-    List<String> months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sept',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-    return '${TimeOfDay.fromDateTime(time).format(context)} | ${'${months[time.month - 1]} ${time.day}, ${time.year}'}';
+    return '${TimeOfDay.fromDateTime(time).format(context)} | ${DateFormat('d MMM y').format(time)}';
   }
 }

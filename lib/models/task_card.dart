@@ -1,6 +1,7 @@
 import 'package:animated_line_through/animated_line_through.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:to_do_app/bloc/task_bloc.dart';
 import 'package:to_do_app/models/task.dart';
 import 'package:to_do_app/models/custom_widgets.dart';
@@ -24,6 +25,7 @@ class TaskCard extends StatelessWidget {
             : null,
         elevation: (state.selectedTaskIds.contains(task.id!)) ? 5 : 2,
         child: ListTile(
+          // isThreeLine: true,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 15,
             vertical: 10,
@@ -66,7 +68,7 @@ class TaskCard extends StatelessWidget {
             child: Text(
               task.title,
               style: TextStyle(
-                color: (task.isCompleted) ? Colors.grey : null,
+                color: (task.isCompleted) ? Colors.grey.shade500 : null,
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
                 fontFamily: 'Afacad',
@@ -77,13 +79,30 @@ class TaskCard extends StatelessWidget {
             ),
           ),
 
-          subtitle: Text(
-            getTime(context, task.createdAt),
-            style: TextStyle(
-              fontFamily: 'Afacad',
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+          subtitle: Column(
+            crossAxisAlignment: .start,
+            children: [
+              Text(
+                formatTime(context, task.createdAt),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: (task.isCompleted) ? Colors.grey.shade600 : null,
+                ),
+              ),
+
+              // const SizedBox(width: 10),
+              if (task.dueDate != null)
+                // Text('Due: ${DateFormat('dd MMM').format(task.dueDate!)}'),
+                Text(
+                  formatDueDate(task.dueDate!),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: (task.isCompleted) ? Colors.grey.shade600 : null,
+                  ),
+                ),
+            ],
           ),
 
           // set task priority
@@ -138,34 +157,38 @@ class TaskCard extends StatelessWidget {
   }
 
   // formate time according to the current date and the created date of the task
-  String getTime(BuildContext context, DateTime time) {
+  String formatTime(BuildContext context, DateTime time) {
     DateTime now = DateTime.now();
 
     final today = DateTime(now.year, now.month, now.day);
     final taskDate = DateTime(time.year, time.month, time.day);
     final difference = today.difference(taskDate).inDays;
 
-    List<String> months = [
-      'Jan',
-      'Feb',
-      'Mar',
-      'Apr',
-      'May',
-      'Jun',
-      'Jul',
-      'Aug',
-      'Sept',
-      'Oct',
-      'Nov',
-      'Dec',
-    ];
-
     if (difference == 0) {
       return TimeOfDay(hour: time.hour, minute: time.minute).format(context);
     }
     if (difference == 1) return 'Yesterday';
-    if (time.year < now.year) return '${time.day}/${time.month}/${time.year}';
+    if (time.year < now.year) return DateFormat.yMd().format(time);
 
-    return '${time.day} $months[time.month - 1]';
+    return DateFormat('dd MMM').format(time);
+  }
+
+  // format the due date
+  String formatDueDate(DateTime time) {
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final dueDate = DateTime(time.year, time.month, time.day);
+    final difference = dueDate.difference(today).inDays;
+
+    if (difference < 0) {
+      return 'Due: ${DateFormat('dd MMM').format(time)} (Passed)';
+    }
+
+    if (difference == 0) {
+      return 'Due: ${DateFormat('dd MMM').format(time)} (Today)';
+    } else if (difference == 1) {
+      return 'Due: ${DateFormat('dd MMM').format(time)} (1 day left)';
+    }
+    return 'Due: ${DateFormat('dd MMM').format(time)} ($difference days left)';
   }
 }
