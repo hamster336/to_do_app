@@ -13,12 +13,18 @@ final class TaskLoaded extends TaskState {
 
   final bool selectionMode;
   final Set<int> selectedTaskIds;
+
+  DateTime? fromDate;
+  DateTime? toDate;
+
   TaskLoaded({
     required this.tasks,
     this.filter = TaskFilter.all,
     this.sort = TaskSort.newest,
     this.selectionMode = false,
     this.selectedTaskIds = const {},
+    this.fromDate,
+    this.toDate,
   });
 
   // filter the loaded tasks
@@ -52,6 +58,26 @@ final class TaskLoaded extends TaskState {
       case TaskSort.lowPriority:
         list.sort((a, b) => b.priority.index.compareTo(a.priority.index));
         return list;
+      case TaskSort.fromTo:
+        if (fromDate != null && toDate != null) {
+          list = list
+              .where(
+                (t) =>
+                    !t.createdAt.isAfter(
+                      DateTime(
+                        toDate!.year,
+                        toDate!.month,
+                        toDate!.day,
+                        23,
+                        59,
+                        59,
+                      ),
+                    ) &&
+                    !t.createdAt.isBefore(fromDate!),
+              )
+              .toList();
+        }
+        return list;
     }
   }
 
@@ -62,6 +88,9 @@ final class TaskLoaded extends TaskState {
     TaskSort? sort,
     bool? selectionMode,
     Set<int>? selectedTaskIds,
+    DateTime? fromDate,
+    DateTime? toDate,
+    bool clearDateRange = false,
   }) {
     return TaskLoaded(
       tasks: tasks ?? this.tasks,
@@ -69,6 +98,16 @@ final class TaskLoaded extends TaskState {
       sort: sort ?? this.sort,
       selectionMode: selectionMode ?? this.selectionMode,
       selectedTaskIds: selectedTaskIds ?? this.selectedTaskIds,
+      fromDate: (clearDateRange)
+          ? null
+          : (fromDate == null)
+          ? this.fromDate
+          : fromDate,
+      toDate: (clearDateRange)
+          ? null
+          : (toDate == null)
+          ? this.toDate
+          : toDate,
     );
   }
 }

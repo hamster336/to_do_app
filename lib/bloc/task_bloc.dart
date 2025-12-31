@@ -23,6 +23,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     on<ToggleTaskSelection>(_toggleTaskSelection);
     on<DeleteSelectedTasks>(_deleteSelectedTasks);
     on<ExitSelectionmode>(_exitSelectionMode);
+    on<SortByDateRange>(_sortByDateRange);
   }
 
   // load tasks from storage
@@ -98,7 +99,10 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     if (state is! TaskLoaded) return;
 
     final current = state as TaskLoaded;
-    emit(current.copyWith(sort: event.sort));
+
+    final leavingFromToSort =
+        current.sort == TaskSort.fromTo && event.sort != TaskSort.fromTo;
+    emit(current.copyWith(sort: event.sort, clearDateRange: leavingFromToSort));
   }
 
   // enter task selection mode
@@ -173,5 +177,21 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
     final currentState = state as TaskLoaded;
 
     emit(currentState.copyWith(selectionMode: false, selectedTaskIds: {}));
+  }
+
+  // sort by fromTo
+  Future<void> _sortByDateRange(
+    SortByDateRange event,
+    Emitter<TaskState> emit,
+  ) async {
+    final current = state as TaskLoaded;
+
+    emit(
+      current.copyWith(
+        sort: TaskSort.fromTo,
+        fromDate: event.fromDate,
+        toDate: event.toDate,
+      ),
+    );
   }
 }

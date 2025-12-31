@@ -42,3 +42,10 @@ final class ToggleTaskSelection extends TaskEvent {
 final class ExitSelectionmode extends TaskEvent {}
 
 final class DeleteSelectedTasks extends TaskEvent {}
+
+final class SortByDateRange extends TaskEvent {
+  final DateTime fromDate;
+  final DateTime toDate;
+
+  SortByDateRange(this.fromDate, this.toDate);
+}

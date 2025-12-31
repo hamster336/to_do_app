@@ -8,5 +8,6 @@ enum TaskSort {
   oldest,
   newest,
   highPriority,
-  lowPriority
+  lowPriority,
+  fromTo
 }

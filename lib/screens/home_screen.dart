@@ -183,15 +183,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       offset: Offset(-10, 0),
                       tooltip: 'Sort tasks',
                       itemBuilder: (context) => <PopupMenuEntry<String>>[
-                        CustomWidgets.popUpMenuItem('old first', 'Oldest'),
-                        CustomWidgets.popUpMenuItem('new first', 'Newest'),
-                        CustomWidgets.popUpMenuItem(
+                        CustomWidgets.sortMenuItem(
+                          'old first',
+                          'Oldest',
+                          state,
+                          TaskSort.oldest,
+                        ),
+                        CustomWidgets.sortMenuItem(
+                          'new first',
+                          'Newest',
+                          state,
+                          TaskSort.newest,
+                        ),
+                        CustomWidgets.sortMenuItem(
                           'high priority',
                           'Higher priority',
+                          state,
+                          TaskSort.highPriority,
                         ),
-                        CustomWidgets.popUpMenuItem(
+                        CustomWidgets.sortMenuItem(
                           'low priority',
                           'Lower priority',
+                          state,
+                          TaskSort.lowPriority,
+                        ),
+                        CustomWidgets.sortMenuItem(
+                          'time range',
+                          'From To',
+                          state,
+                          TaskSort.fromTo,
                         ),
                       ],
                       onSelected: (value) {
@@ -215,6 +235,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             context.read<TaskBloc>().add(
                               SortTask(sort: TaskSort.lowPriority),
                             );
+                            break;
+                          case 'time range':
+                            CustomWidgets.showFromTo(context);
                             break;
                         }
                       },

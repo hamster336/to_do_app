@@ -175,6 +175,7 @@ class _TaskEditorSheetState extends State<TaskEditorSheet> {
       final task = (isUpdating)
           ? widget.initialTask!.copyWith(
               title: text,
+              // createdAt: DateTime(2025, 12, 29, 23, 59, 59),
               isCompleted: _isCompleted,
               dueDate: _dueDate,
             )
