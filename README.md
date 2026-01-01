@@ -33,7 +33,6 @@ Task editing:
 
 Setting priority:
 <p align="left">
-  <img src="screenshots/dark.png" width="200">
   <img src="screenshots/priority1.png" width="200">
   <img src="screenshots/priority2.png" width="200">
   <img src="screenshots/priority3.png" width="200">
