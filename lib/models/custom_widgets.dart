@@ -7,12 +7,21 @@ import 'package:to_do_app/models/task_filter_enum.dart';
 
 class CustomWidgets {
   // priority popUpMenu
-  static PopupMenuItem<String> priorityMenuItem(String value, String text) {
+  static PopupMenuItem<String> priorityMenuItem(
+    String value,
+    String text,
+    Priority currentPriority,
+    Priority priority,
+  ) {
     return PopupMenuItem(
       value: value,
       child: Text(
         text,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w500,
+          color: (currentPriority == priority) ? Colors.orange : null,
+        ),
       ),
     );
   }

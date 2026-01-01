@@ -110,9 +110,9 @@ class TaskCard extends StatelessWidget {
               ? PopupMenuButton<String>(
                   tooltip: 'Set Priority',
                   itemBuilder: (context) => <PopupMenuEntry<String>>[
-                    CustomWidgets.priorityMenuItem('high', 'High'),
-                    CustomWidgets.priorityMenuItem('med', 'Medium'),
-                    CustomWidgets.priorityMenuItem('low', 'Low'),
+                    CustomWidgets.priorityMenuItem('high', 'High', task.priority, Priority.high),
+                    CustomWidgets.priorityMenuItem('med', 'Medium', task.priority, Priority.medium),
+                    CustomWidgets.priorityMenuItem('low', 'Low', task.priority, Priority.low),
                   ],
                   onSelected: (value) {
                     switch (value) {
