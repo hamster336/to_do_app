@@ -31,9 +31,14 @@ Task editing:
   <img src="screenshots/editing.png" width="200">
 </p>
 
-Setting priority and sorting:
+Setting priority:
 <p align="left">
   <img src="screenshots/dark.png" width="200">
   <img src="screenshots/priority.png" width="200">
-  <img src="screenshots/sorting.png" width="200">
+</p>
+
+Sort Highlighting and FromTo sort:
+<p align="left">
+  <img src="screenshots/sortHighlight.png" width="200">
+  <img src="screenshots/fromTo.png" width="200">
 </p>
